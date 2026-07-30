@@ -11,32 +11,17 @@ public class Constant {
 	public static final String VERSION = "1.0";
 	
 	
-	// 환경변수 관련 상수
+	// 속성 설정 관련 상수
 	
-	/** 노션 토큰 환경변수 명 */
-	public static final String NOTION_TOKEN_ENVNAME = "OCTO_NOTION_TOKEN";
+	/** 소스 노션 토큰 속성 설정 명 */
+	public static final String SOURCE_NOTION_TOKEN_PROPNAME = "source.notion.token";
 	
-	/** 노션 대상 DB 목록 환경변수 명 */
-	public static final String NOTION_DB_LIST_ENVNAME = "OCTO_NOTION_DB_LIST";
+	/** 소스 수집 대상 노션 DB 목록 속성 설정 명 */
+	public static final String SOURCE_NOTION_DB_LIST_PROPNAME = "source.notion.db.list";
 	
-	/** 수집 스케줄 환경변수 명 */
-	public static final String SCHEDULE_ENVNAME = "OCTO_SOURCE_SCHEDULE";
+	/** 소스 수집 스케줄 속성 설정 명 */
+	public static final String SOURCE_POLL_SCHEDULE_PROPNAME = "source.poll.schedule";
 	
-	/** 소스 토픽명 환경변수 명 */
-	public static final String SOURCE_TOPIC_ENVNAME = "OCTO_SOURCE_TOPIC";
-	
-
-	// 설정 객체 내의 키
-	
-	/** 설정에서 노션 토큰 키 */
-	public static final String NOTION_TOKEN_KEY = "NOTION_TOKEN";
-	
-	/** 노션 DB 목록 키*/
-	public static final String NOTION_DB_LIST_KEY = "NOTION_DB_LIST";
-	
-	/** 노션 데이터 수집 스케줄 키 */
-	public static final String SCHEDULE_KEY = "SOURCE_SCHEDULE";
-	
-	/** 카프카 토픽 키 */
-	public static final String SOURCE_TOPIC_KEY = "SOURCE_TOPIC";
+	/** 소스 토픽명 속성 설정 명 */
+	public static final String SOURCE_TOPIC_PROPNAME = "source.topic";
 }

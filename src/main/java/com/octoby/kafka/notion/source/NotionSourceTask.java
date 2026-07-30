@@ -17,9 +17,11 @@ import com.octoby.kafka.notion.util.JSONUtil;
 
 import lombok.extern.slf4j.Slf4j;
 import notion.api.v1.NotionClient;
+import notion.api.v1.model.databases.DatabaseProperty.MultiSelect.Option;
 import notion.api.v1.model.databases.QueryResults;
 import notion.api.v1.model.pages.Page;
 import notion.api.v1.model.pages.PageProperty;
+import notion.api.v1.model.pages.PageProperty.RichText;
 import notion.api.v1.request.databases.QueryDatabaseRequest;
 
 /**
@@ -61,23 +63,23 @@ public class NotionSourceTask extends SourceTask {
 		try {
 			
 			// 노션 토큰 설정
-			this.notionToken = propMap.get(Constant.NOTION_TOKEN_KEY);
+			this.notionToken = propMap.get(Constant.SOURCE_NOTION_TOKEN_PROPNAME);
 			
 			// 노션 클라이언트 객체 생성
 			this.client = new NotionClient(this.notionToken);
 			
 			// 노션 DB 목록 객체 생성
 			this.dbList = CollectionUtil.toList(
-				propMap.get(Constant.NOTION_DB_LIST_KEY)
+				propMap.get(Constant.SOURCE_NOTION_DB_LIST_PROPNAME)
 			);
 			
 			// 수집 주기 객체 생성
 			this.scheduler = CronJob.CronExp.create(
-				propMap.get(Constant.SCHEDULE_KEY)	
+				propMap.get(Constant.SOURCE_POLL_SCHEDULE_PROPNAME)	
 			);
 			
 			// 토픽 설정
-			this.topic = propMap.get(Constant.SOURCE_TOPIC_KEY);
+			this.topic = propMap.get(Constant.SOURCE_TOPIC_PROPNAME);
 			
 		} catch(Exception ex) {
 			
@@ -120,31 +122,31 @@ public class NotionSourceTask extends SourceTask {
 	}
 	
 	/**
+	 * 노션 DB의 새로운 레코드 목록을 반환
 	 * 
-	 * 
-	 * @param dbId
-	 * @return
+	 * @param dbId 노션 DB 아이디
+	 * @return 새로운 레코드 목록
 	 */
 	private List<SourceRecord> getNewRecordList(String dbId) {
 				
-		//
+		// db의 데이터를 모두 조회
 		QueryDatabaseRequest request = new QueryDatabaseRequest(dbId);
 		QueryResults results = client.queryDatabase(request);
 
-		//
+		// 새로운 레코드 목록 저장 객체
 		List<SourceRecord> newList = new ArrayList<>();
 		
 		for(Page row: results.getResults()) {
 			
-			//
+			// 새로운 레코드 여부 검사
 			if(this.isNewRecord(row) == false) {
 				continue;
 			}
 			
-			//
+			// 새로운 레코드 객체 생성
 			String message = toJSON(row);
 			
-			SourceRecord kafkaRecord = new SourceRecord(
+			SourceRecord newRecord = new SourceRecord(
 				null,					// 소스 파티션
 				null,					// 소스 오프셋
 				this.topic,				// 토픽
@@ -152,18 +154,18 @@ public class NotionSourceTask extends SourceTask {
 				message					// 전송 메시지
 			);
 			
-			//
-			newList.add(kafkaRecord);
+			// 새로운 레코드 추가
+			newList.add(newRecord);
 		}
 		
 		return newList;
 	}
 	
 	/**
+	 * 새로운 레코드 여부 반환
 	 * 
-	 * 
-	 * @param row
-	 * @return
+	 * @param row 노션 DB의 로우
+	 * @return 새로운 레코드 여부
 	 */
 	private boolean isNewRecord(Page row) {
 		
@@ -175,30 +177,50 @@ public class NotionSourceTask extends SourceTask {
 	}
 	
 	/**
+	 * 노션 DB의 로우를 JSON 문자열로 변환 후 반환
 	 * 
-	 * 
-	 * @param row
-	 * @return
+	 * @param row 노션 DB의 로우
+	 * @return JSON 문자열
 	 */
 	private static String toJSON(Page row) {
 
 		Map<String, Object> jsonMap = new HashMap<>();
 
+		// 컬럼별로 JSON 데이터 설정
 		Map<String, PageProperty> propMap = row.getProperties();
 		
 		for(String key: propMap.keySet()) {
 			
 			PageProperty prop = propMap.get(key);
 			
+			// 컬럼의 타입별로 데이터 설정
 			String type = prop.getType().getValue();
 			
 			switch(type) {
 			case "title":
-				jsonMap.put(key, prop.getTitle().get(0).getText().getContent());
+				{
+					StringBuilder buffer = new StringBuilder();
+					
+					for(RichText text: prop.getTitle()) {
+						buffer.append(text.getText().getContent()).append("\n");
+					}
+					
+					jsonMap.put(key, buffer.toString());
+				}
+				
 				break;
 				
 			case "rich_text":
-				jsonMap.put(key, prop.getRichText().get(0).getPlainText());
+				{
+					StringBuilder buffer = new StringBuilder();
+					
+					for(RichText text: prop.getRichText()) {
+						buffer.append(text.getText().getContent()).append("\n");
+					}
+					
+					jsonMap.put(key, buffer.toString());
+				}
+				
 				break;
 				
 			case "number":
@@ -217,11 +239,21 @@ public class NotionSourceTask extends SourceTask {
 				break;
 				
 			case "multi_select":
-				jsonMap.put(key, prop.getMultiSelect().get(0).getName());
+				{
+					StringBuilder buffer = new StringBuilder();
+					
+					for(Option option: prop.getMultiSelect()) {
+						buffer.append(option.getName()).append("\n");
+					}
+					
+					jsonMap.put(key, buffer.toString());
+				}
+
 				break;
 			}
 		}
 		
+		// JSON으로 
 		return JSONUtil.toJSON(jsonMap);
 	}
 

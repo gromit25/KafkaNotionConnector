@@ -593,6 +593,22 @@ public class CronJob {
 		/** 요일 목록 : 0-7, 0과 7은 일요일, 1은 월요일, 6은 토요일 */
 		private int[] daysOfWeek;
 		
+		
+		/**
+		 * 크론 표현식 검증 결과 반환
+		 * 
+		 * @param cronExp 크론 표현식
+		 * @return 표현식 형식 검증
+		 */
+		public static boolean isValid(String cronExp) {
+			
+			if(StringUtil.isBlank(cronExp) == true) {
+				return false;
+			}
+			
+			return cronExp.matches(CronExp.cronExpPStr);
+		}
+		
 		/**
 		 * 크론 표현식 객체 생성 메소드
 		 * 
