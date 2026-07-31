@@ -139,9 +139,9 @@ public class NotionSourceTask extends SourceTask {
 		for(Page row: results.getResults()) {
 			
 			// 새로운 레코드 여부 검사
-			if(this.isNewRecord(row) == false) {
-				continue;
-			}
+//			if(this.isNewRecord(row) == false) {
+//				continue;
+//			}
 			
 			// 새로운 레코드 객체 생성
 			String message = toJSON(row);
@@ -158,6 +158,8 @@ public class NotionSourceTask extends SourceTask {
 			newList.add(newRecord);
 		}
 		
+		System.out.println("DEBUG 200: " + newList.size());
+		
 		return newList;
 	}
 	
@@ -170,6 +172,12 @@ public class NotionSourceTask extends SourceTask {
 	private boolean isNewRecord(Page row) {
 		
 		try {
+			
+			System.out.println("");
+			System.out.println("### DEBUG LAST POLL TIME: " + DateUtil.getDateTimeStr(this.lastPollTime));
+			System.out.println("### DEBUG LAST EDITED TIME: " + DateUtil.getDateTimeStr(DateUtil.toMillis(row.getLastEditedTime())));
+			System.out.println("");
+			
 			return this.lastPollTime < DateUtil.toMillis(row.getLastEditedTime());
 		} catch(Exception ex) {
 			return false;

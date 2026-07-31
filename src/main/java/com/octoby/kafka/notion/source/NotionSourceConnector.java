@@ -68,6 +68,7 @@ public class NotionSourceConnector extends SourceConnector {
 
 	@Override
 	public void start(Map<String, String> propMap) {
+		
 		this.configMap = propMap;
 	}
 
