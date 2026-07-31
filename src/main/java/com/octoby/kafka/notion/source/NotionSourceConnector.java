@@ -35,13 +35,13 @@ public class NotionSourceConnector extends SourceConnector {
 		
 		return new ConfigDef()
 			.define(
-				Constant.SOURCE_NOTION_TOKEN_PROPNAME,
+				Constant.NOTION_TOKEN_PROPNAME,
 				ConfigDef.Type.STRING,
 				ConfigDef.Importance.HIGH,
 				"노션 API 토큰"
 			)
 			.define(
-				Constant.SOURCE_NOTION_DB_LIST_PROPNAME,
+				Constant.NOTION_DB_LIST_PROPNAME,
 				ConfigDef.Type.STRING,
 				ConfigDef.Importance.HIGH,
 				"노션 DB 아이디 목록"

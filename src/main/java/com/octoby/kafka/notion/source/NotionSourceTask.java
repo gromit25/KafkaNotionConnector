@@ -63,14 +63,14 @@ public class NotionSourceTask extends SourceTask {
 		try {
 			
 			// 노션 토큰 설정
-			this.notionToken = propMap.get(Constant.SOURCE_NOTION_TOKEN_PROPNAME);
+			this.notionToken = propMap.get(Constant.NOTION_TOKEN_PROPNAME);
 			
 			// 노션 클라이언트 객체 생성
 			this.client = new NotionClient(this.notionToken);
 			
 			// 노션 DB 목록 객체 생성
 			this.dbList = CollectionUtil.toList(
-				propMap.get(Constant.SOURCE_NOTION_DB_LIST_PROPNAME)
+				propMap.get(Constant.NOTION_DB_LIST_PROPNAME)
 			);
 			
 			// 수집 주기 객체 생성
