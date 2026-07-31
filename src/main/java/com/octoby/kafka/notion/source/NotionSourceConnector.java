@@ -11,6 +11,7 @@ import org.apache.kafka.connect.source.SourceConnector;
 
 import com.octoby.kafka.notion.Constant;
 import com.octoby.kafka.notion.util.CronJob;
+import com.octoby.kafka.notion.util.PropertiesUtil;
 
 /**
  * 노션 소스 커넥터 클래스
@@ -48,7 +49,7 @@ public class NotionSourceConnector extends SourceConnector {
 			.define(
 				Constant.SOURCE_POLL_SCHEDULE_PROPNAME,
 				ConfigDef.Type.STRING,
-				"*/10 * * * * *",
+				"0 * * * * *",
 				(name, value) -> {
 					if(CronJob.CronExp.isValid(value.toString()) == false) {
 						new ConfigException(name, value, "invalid cron expression.");
@@ -68,8 +69,7 @@ public class NotionSourceConnector extends SourceConnector {
 
 	@Override
 	public void start(Map<String, String> propMap) {
-		
-		this.configMap = propMap;
+		this.configMap = PropertiesUtil.resolve(propMap);
 	}
 
 	@Override
