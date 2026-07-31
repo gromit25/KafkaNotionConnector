@@ -158,8 +158,6 @@ public class NotionSourceTask extends SourceTask {
 			newList.add(newRecord);
 		}
 		
-		System.out.println("DEBUG 200: " + newList.size());
-		
 		return newList;
 	}
 	
