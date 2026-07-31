@@ -1,5 +1,6 @@
 package com.octoby.kafka.notion.sink;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,14 +12,14 @@ import com.octoby.kafka.notion.Constant;
 import com.octoby.kafka.notion.util.PropertiesUtil;
 
 /**
- * 
+ * 노션 싱크 커넥터 클래스
  * 
  * @author jmsohn
  */
 public class NotionSinkConnector extends SinkConnector {
 	
 	
-	/** 카프카 커넥터 설정 정보 */
+	/** 카프카 싱크 커넥터 설정 정보 */
 	private Map<String, String> configMap;
 	
 
@@ -29,7 +30,21 @@ public class NotionSinkConnector extends SinkConnector {
 	
 	@Override
 	public ConfigDef config() {
-		return null;
+		
+		return new ConfigDef()
+			.define(
+				Constant.NOTION_TOKEN_PROPNAME,
+				ConfigDef.Type.STRING,
+				ConfigDef.Importance.HIGH,
+				"노션 API 토큰"
+			)
+			.define(
+				Constant.NOTION_DB_LIST_PROPNAME,
+				ConfigDef.Type.STRING,
+				ConfigDef.Importance.HIGH,
+				"노션 DB 아이디 목록"
+			)
+			;
 	}
 
 	@Override
@@ -44,12 +59,18 @@ public class NotionSinkConnector extends SinkConnector {
 
 	@Override
 	public List<Map<String, String>> taskConfigs(int maxTasks) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<Map<String, String>> taskConfigs = new ArrayList<>();
+		
+		for(int index = 0; index < maxTasks; index++) {
+			taskConfigs.add(this.configMap);
+		}
+		
+		return taskConfigs;
 	}
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
+		// do nothing
 	}
 }

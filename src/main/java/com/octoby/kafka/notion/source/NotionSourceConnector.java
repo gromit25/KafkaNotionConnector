@@ -21,7 +21,7 @@ import com.octoby.kafka.notion.util.PropertiesUtil;
 public class NotionSourceConnector extends SourceConnector {
 	
 	
-	/** 카프카 커넥터 설정 정보 */
+	/** 카프카 소스 커넥터 설정 정보 */
 	private Map<String, String> configMap;
 	
 	
