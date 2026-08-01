@@ -3,6 +3,7 @@ package com.octoby.kafka.notion.sink.factory;
 import java.util.Map;
 
 import com.octoby.kafka.notion.sink.domain.ReqDTO;
+import com.octoby.kafka.notion.sink.process.PutReqProcess;
 import com.octoby.kafka.notion.sink.process.ReqProcess;
 import com.octoby.kafka.notion.sink.domain.PutReqDTO;
 
@@ -35,6 +36,6 @@ public class PutReqFactory extends ReqFactory {
 
 	@Override
 	public ReqProcess createProcess() {
-		return null;
+		return new PutReqProcess();
 	}
 }

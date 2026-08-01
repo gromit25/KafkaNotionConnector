@@ -10,15 +10,13 @@ import com.octoby.kafka.notion.Constant;
 import com.octoby.kafka.notion.sink.domain.ReqDTO;
 import com.octoby.kafka.notion.sink.factory.ReqFactory;
 import com.octoby.kafka.notion.sink.process.ReqProcess;
-import com.octoby.kafka.notion.util.CollectionUtil;
-import com.octoby.kafka.notion.util.CronJob;
-import com.octoby.kafka.notion.util.JSONUtil;
 
 import lombok.extern.slf4j.Slf4j;
 import notion.api.v1.NotionClient;
 
 /**
- * 
+ * 노션 싱크 태스크 클래스<br>
+ * 수신 데이터 처리
  * 
  * @author jmsohn
  */

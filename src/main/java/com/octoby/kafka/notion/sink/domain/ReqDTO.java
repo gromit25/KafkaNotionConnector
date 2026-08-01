@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 public class ReqDTO {
 
-	/** 처리 방식 */
+	/** 처리 방식(PUT/POST/DELETE) */
 	@Getter
 	@Setter
 	private String method;
