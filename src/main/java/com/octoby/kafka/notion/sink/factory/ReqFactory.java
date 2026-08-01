@@ -3,6 +3,7 @@ package com.octoby.kafka.notion.sink.factory;
 import java.util.Map;
 
 import com.octoby.kafka.notion.sink.domain.RowReqDTO;
+import com.octoby.kafka.notion.sink.process.ReqProcess;
 import com.octoby.kafka.notion.util.JSONUtil;
 
 /**
@@ -10,7 +11,7 @@ import com.octoby.kafka.notion.util.JSONUtil;
  * 
  * @author jmsohn
  */
-public abstract class RowReqFactory {
+public abstract class ReqFactory {
 	
 	/**
 	 * 팩토리 객체 생성<br>
@@ -19,7 +20,7 @@ public abstract class RowReqFactory {
 	 * @param jsonStr 메시지
 	 * @return 메시지 팩토리
 	 */
-	public static RowReqFactory create(String jsonStr) throws Exception {
+	public static ReqFactory create(String jsonStr) throws Exception {
 		
 		Map<String, Object> jsonMap = JSONUtil.parseMap(jsonStr);
 		
@@ -46,14 +47,14 @@ public abstract class RowReqFactory {
 	 * 
 	 * @return 생성된 DTO 객체
 	 */
-	protected abstract RowReqDTO createDTO();
+	protected abstract RowReqDTO createConcreteDTO();
 	
 	/**
 	 * 생성자
 	 * 
 	 * @param jsonMap
 	 */
-	protected RowReqFactory(Map<String, Object> jsonMap) {
+	protected ReqFactory(Map<String, Object> jsonMap) {
 		this.jsonMap = jsonMap;
 	}
 	
@@ -62,9 +63,9 @@ public abstract class RowReqFactory {
 	 * 
 	 * @return 생성된 DTO 객체
 	 */
-	public RowReqDTO genDTO() {
+	public RowReqDTO createDTO() {
 		
-		RowReqDTO dto = this.createDTO();
+		RowReqDTO dto = this.createConcreteDTO();
 		
 		dto.setDbId(this.getDbId());
 		
@@ -113,4 +114,13 @@ public abstract class RowReqFactory {
 		
 		return (Map<String, Object>)this.jsonMap.get("data");
 	}
+	
+	// ------------------------------
+	
+	/**
+	 * 처리 프로세스 객체 생성 및 반환
+	 * 
+	 * @return 처리 프로세스 객체
+	 */
+	public abstract ReqProcess createProcess();
 }

@@ -8,7 +8,8 @@ import org.apache.kafka.connect.sink.SinkTask;
 
 import com.octoby.kafka.notion.Constant;
 import com.octoby.kafka.notion.sink.domain.RowReqDTO;
-import com.octoby.kafka.notion.sink.factory.RowReqFactory;
+import com.octoby.kafka.notion.sink.factory.ReqFactory;
+import com.octoby.kafka.notion.sink.process.ReqProcess;
 import com.octoby.kafka.notion.util.CollectionUtil;
 import com.octoby.kafka.notion.util.CronJob;
 import com.octoby.kafka.notion.util.JSONUtil;
@@ -65,14 +66,17 @@ public class NotionSinkTask extends SinkTask {
 	@Override
 	public void put(Collection<SinkRecord> sinkRecords) {
 		
-		if(this.client == null) {
-			return;
-		}
-		
+		// 레코드가 없을 경우 반환
 		if(sinkRecords == null || sinkRecords.size() == 0) {
 			return;
 		}
 		
+		// 노션 클라이언트 객체가 없을 경우 반환
+		if(this.client == null) {
+			return;
+		}
+		
+		// 각 레코드 별로 처리
 		for(SinkRecord sinkRecord: sinkRecords) {
 			
 			if(sinkRecord.value() == null) {
@@ -81,9 +85,17 @@ public class NotionSinkTask extends SinkTask {
 			
 			try {
 				
-				RowReqDTO rowReqDTO = RowReqFactory
-					.create(sinkRecord.value().toString())
-					.genDTO();
+				// 메시지의 팩토리 객체 생성
+				ReqFactory factory = ReqFactory.create(sinkRecord.value().toString());
+				
+				// DTO 객체 생성
+				RowReqDTO dto = factory.createDTO();
+				
+				// 프로세스 객체 생성
+				ReqProcess process = factory.createProcess();
+				
+				// 처리 실행
+				process.process(this.client, dto);
 				
 			} catch(Exception ex) {
 				log.error("sink task error.", ex);
@@ -93,5 +105,10 @@ public class NotionSinkTask extends SinkTask {
 
 	@Override
 	public void stop() {
+		
+		// 노션 클라이언트 종료
+		if(this.client != null) {
+			this.client.close();
+		}
 	}
 }

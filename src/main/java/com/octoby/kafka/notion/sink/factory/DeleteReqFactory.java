@@ -4,13 +4,15 @@ import java.util.Map;
 
 import com.octoby.kafka.notion.sink.domain.DeleteReqDTO;
 import com.octoby.kafka.notion.sink.domain.RowReqDTO;
+import com.octoby.kafka.notion.sink.process.DeleteReqProcess;
+import com.octoby.kafka.notion.sink.process.ReqProcess;
 
 /**
  * DeleteDTO 생성용 팩토리 클래스
  * 
  * @author jmsohn
  */
-public class DeleteReqFactory extends RowReqFactory {
+public class DeleteReqFactory extends ReqFactory {
 	
 	/**
 	 * 생성자
@@ -22,12 +24,17 @@ public class DeleteReqFactory extends RowReqFactory {
 	}
 
 	@Override
-	public RowReqDTO createDTO() {
+	public RowReqDTO createConcreteDTO() {
 		
 		DeleteReqDTO dto = new DeleteReqDTO();
 		
 		dto.setKey(this.getKey());
 		
 		return dto;
+	}
+
+	@Override
+	public ReqProcess createProcess() {
+		return new DeleteReqProcess();
 	}
 }

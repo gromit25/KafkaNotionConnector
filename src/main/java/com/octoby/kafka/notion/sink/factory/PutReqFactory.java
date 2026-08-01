@@ -3,6 +3,7 @@ package com.octoby.kafka.notion.sink.factory;
 import java.util.Map;
 
 import com.octoby.kafka.notion.sink.domain.RowReqDTO;
+import com.octoby.kafka.notion.sink.process.ReqProcess;
 import com.octoby.kafka.notion.sink.domain.PutReqDTO;
 
 /**
@@ -10,7 +11,7 @@ import com.octoby.kafka.notion.sink.domain.PutReqDTO;
  * 
  * @author jmsohn
  */
-public class PutReqFactory extends RowReqFactory {
+public class PutReqFactory extends ReqFactory {
 
 	/**
 	 * 생성자
@@ -22,7 +23,7 @@ public class PutReqFactory extends RowReqFactory {
 	}
 
 	@Override
-	public RowReqDTO createDTO() {
+	public RowReqDTO createConcreteDTO() {
 		
 		PutReqDTO dto = new PutReqDTO();
 		
@@ -30,5 +31,10 @@ public class PutReqFactory extends RowReqFactory {
 		dto.setDataMap(this.getData());
 		
 		return dto;
+	}
+
+	@Override
+	public ReqProcess createProcess() {
+		return null;
 	}
 }
