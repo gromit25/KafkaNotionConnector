@@ -31,10 +31,7 @@ public class NotionSinkTask extends SinkTask {
 	
 	/** 노션 크라이언트 객체 */
 	private NotionClient client;
-	
-	/** 전송할 토픽명 */
-	private String topic;
-	
+		
 
 	@Override
 	public String version() {
@@ -51,10 +48,7 @@ public class NotionSinkTask extends SinkTask {
 			
 			// 노션 클라이언트 객체 생성
 			this.client = new NotionClient(this.notionToken);
-			
-			// 토픽 설정
-			this.topic = propMap.get(Constant.SINK_TOPIC_PROPNAME);
-			
+						
 		} catch(Exception ex) {
 			
 			log.error("notion sink task error.", ex);

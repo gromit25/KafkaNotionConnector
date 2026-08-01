@@ -29,7 +29,4 @@ public class Constant {
 	public static final String SOURCE_TOPIC_PROPNAME = "source.topic";
 	
 	// 싱크 커넥터 속성 설정 관련 상수
-	
-	/** */
-	public static final String SINK_TOPIC_PROPNAME = "sink.topic";
 }
