@@ -8,7 +8,7 @@ import lombok.Setter;
  * 
  * @author jmsohn
  */
-public class RowReqDTO {
+public class ReqDTO {
 
 	/** 처리 방식 */
 	@Getter

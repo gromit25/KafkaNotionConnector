@@ -10,7 +10,7 @@ import lombok.Setter;
  * 
  * @author jmsohn
  */
-public class PostReqDTO extends RowReqDTO {
+public class PostReqDTO extends ReqDTO {
 	
 
 	/** 추가할 데이터 맵 */

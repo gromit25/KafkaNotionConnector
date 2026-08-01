@@ -2,7 +2,7 @@ package com.octoby.kafka.notion.sink.factory;
 
 import java.util.Map;
 
-import com.octoby.kafka.notion.sink.domain.RowReqDTO;
+import com.octoby.kafka.notion.sink.domain.ReqDTO;
 import com.octoby.kafka.notion.sink.process.ReqProcess;
 import com.octoby.kafka.notion.util.JSONUtil;
 
@@ -47,7 +47,7 @@ public abstract class ReqFactory {
 	 * 
 	 * @return 생성된 DTO 객체
 	 */
-	protected abstract RowReqDTO createConcreteDTO();
+	protected abstract ReqDTO createConcreteDTO();
 	
 	/**
 	 * 생성자
@@ -63,9 +63,9 @@ public abstract class ReqFactory {
 	 * 
 	 * @return 생성된 DTO 객체
 	 */
-	public RowReqDTO createDTO() {
+	public ReqDTO createDTO() {
 		
-		RowReqDTO dto = this.createConcreteDTO();
+		ReqDTO dto = this.createConcreteDTO();
 		
 		dto.setDbId(this.getDbId());
 		

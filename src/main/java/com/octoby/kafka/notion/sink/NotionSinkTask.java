@@ -7,7 +7,7 @@ import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
 
 import com.octoby.kafka.notion.Constant;
-import com.octoby.kafka.notion.sink.domain.RowReqDTO;
+import com.octoby.kafka.notion.sink.domain.ReqDTO;
 import com.octoby.kafka.notion.sink.factory.ReqFactory;
 import com.octoby.kafka.notion.sink.process.ReqProcess;
 import com.octoby.kafka.notion.util.CollectionUtil;
@@ -83,7 +83,7 @@ public class NotionSinkTask extends SinkTask {
 				ReqFactory factory = ReqFactory.create(sinkRecord.value().toString());
 				
 				// DTO 객체 생성
-				RowReqDTO dto = factory.createDTO();
+				ReqDTO dto = factory.createDTO();
 				
 				// 프로세스 객체 생성
 				ReqProcess process = factory.createProcess();

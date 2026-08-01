@@ -8,7 +8,7 @@ import lombok.Setter;
  * 
  * @author jmsohn
  */
-public class DeleteReqDTO extends RowReqDTO {
+public class DeleteReqDTO extends ReqDTO {
 	
 	
 	/** 삭제할 행의 키 */

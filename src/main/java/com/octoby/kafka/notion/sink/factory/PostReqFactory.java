@@ -2,7 +2,7 @@ package com.octoby.kafka.notion.sink.factory;
 
 import java.util.Map;
 
-import com.octoby.kafka.notion.sink.domain.RowReqDTO;
+import com.octoby.kafka.notion.sink.domain.ReqDTO;
 import com.octoby.kafka.notion.sink.process.PostReqProcess;
 import com.octoby.kafka.notion.sink.process.ReqProcess;
 import com.octoby.kafka.notion.sink.domain.PostReqDTO;
@@ -24,7 +24,7 @@ public class PostReqFactory extends ReqFactory {
 	}
 
 	@Override
-	public RowReqDTO createConcreteDTO() {
+	public ReqDTO createConcreteDTO() {
 		
 		PostReqDTO dto = new PostReqDTO();
 		

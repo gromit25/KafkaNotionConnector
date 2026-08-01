@@ -3,7 +3,7 @@ package com.octoby.kafka.notion.sink.factory;
 import java.util.Map;
 
 import com.octoby.kafka.notion.sink.domain.DeleteReqDTO;
-import com.octoby.kafka.notion.sink.domain.RowReqDTO;
+import com.octoby.kafka.notion.sink.domain.ReqDTO;
 import com.octoby.kafka.notion.sink.process.DeleteReqProcess;
 import com.octoby.kafka.notion.sink.process.ReqProcess;
 
@@ -24,7 +24,7 @@ public class DeleteReqFactory extends ReqFactory {
 	}
 
 	@Override
-	public RowReqDTO createConcreteDTO() {
+	public ReqDTO createConcreteDTO() {
 		
 		DeleteReqDTO dto = new DeleteReqDTO();
 		

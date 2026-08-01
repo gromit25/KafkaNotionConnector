@@ -10,7 +10,7 @@ import lombok.Setter;
  * 
  * @author jmsohn
  */
-public class PutReqDTO extends RowReqDTO {
+public class PutReqDTO extends ReqDTO {
 	
 	
 	/** 추가/수정할 키 */
