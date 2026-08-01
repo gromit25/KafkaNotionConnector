@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 
+ * 노션 DB의 행 삭제 메시지 DTO 클래스
  * 
  * @author jmsohn
  */
-public class DeleteDTO extends MessageDTO {
+public class DeleteReqDTO extends RowReqDTO {
 	
 	
-	/** */
+	/** 삭제할 행의 키 */
 	@Getter
 	@Setter
 	private String key;
@@ -20,7 +20,7 @@ public class DeleteDTO extends MessageDTO {
 	/**
 	 * 생성자
 	 */
-	public DeleteDTO() {
+	public DeleteReqDTO() {
 		this.setMethod("DELETE");
 	}
 }

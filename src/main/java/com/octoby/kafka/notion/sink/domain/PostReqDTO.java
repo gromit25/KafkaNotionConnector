@@ -6,14 +6,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 
+ * 노션 DB의 행 추가 메시지 DTO 클래스
  * 
  * @author jmsohn
  */
-public class PostDTO extends MessageDTO {
+public class PostReqDTO extends RowReqDTO {
 	
 
-	/** */
+	/** 추가할 데이터 맵 */
 	@Getter
 	@Setter
 	private Map<String, Object> dataMap;
@@ -22,7 +22,7 @@ public class PostDTO extends MessageDTO {
 	/**
 	 * 생성자
 	 */
-	public PostDTO() {
+	public PostReqDTO() {
 		this.setMethod("POST");
 	}
 }

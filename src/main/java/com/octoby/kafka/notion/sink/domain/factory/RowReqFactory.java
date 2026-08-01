@@ -2,34 +2,33 @@ package com.octoby.kafka.notion.sink.domain.factory;
 
 import java.util.Map;
 
-import com.octoby.kafka.notion.sink.domain.MessageDTO;
+import com.octoby.kafka.notion.sink.domain.RowReqDTO;
 import com.octoby.kafka.notion.util.JSONUtil;
 
-import lombok.Getter;
-
 /**
- * 
+ * 메시지 DTO 객체 생성 팩토리 추상 클래스 
  * 
  * @author jmsohn
  */
-public abstract class MessageFactory {
+public abstract class RowReqFactory {
 	
 	/**
+	 * 팩토리 객체 생성<br>
+	 * 메시지의 'method' 항목에 따라 생성
 	 * 
-	 * 
-	 * @param jsonStr
-	 * @return
+	 * @param jsonStr 메시지
+	 * @return 메시지 팩토리
 	 */
-	public static MessageFactory create(String jsonStr) throws Exception {
+	public static RowReqFactory create(String jsonStr) throws Exception {
 		
 		Map<String, Object> jsonMap = JSONUtil.parseMap(jsonStr);
 		
 		String method = jsonMap.get("method").toString();
 		
 		return switch(method) {
-			case "PUT" -> new PutFactory(jsonMap);
-			case "POST" -> new PostFactory(jsonMap);
-			case "DELETE" -> new DeleteFactory(jsonMap);
+			case "PUT" -> new PutReqFactory(jsonMap);
+			case "POST" -> new PostReqFactory(jsonMap);
+			case "DELETE" -> new DeleteReqFactory(jsonMap);
 			default -> throw new IllegalArgumentException("invalid method type: " + method);
 		};
 	}
@@ -38,31 +37,30 @@ public abstract class MessageFactory {
 	// -----------------------------------------------------
 	
 	
-	/** */
-	@Getter
+	/** 파싱된 메시지 객체 */
 	private Map<String, Object> jsonMap;
 	
 	
 	/**
+	 * DTO 생성 추상 메소드
 	 * 
-	 * 
-	 * @return
+	 * @return 생성된 DTO 객체
 	 */
-	public abstract MessageDTO genDTO();
+	public abstract RowReqDTO genDTO();
 	
 	/**
 	 * 생성자
 	 * 
 	 * @param jsonMap
 	 */
-	protected MessageFactory(Map<String, Object> jsonMap) {
+	protected RowReqFactory(Map<String, Object> jsonMap) {
 		this.jsonMap = jsonMap;
 	}
 	
 	/**
+	 * 메시지에서 키값 추출 후 반환
 	 * 
-	 * 
-	 * @return
+	 * @return 키값
 	 */
 	protected String getKey() {
 		
@@ -74,9 +72,9 @@ public abstract class MessageFactory {
 	}
 	
 	/**
+	 * 메시지에서 데이터맵 추출 후 반환
 	 * 
-	 * 
-	 * @return
+	 * @return 데이터맵
 	 */
 	@SuppressWarnings("unchecked")
 	protected Map<String, Object> getData() {
