@@ -10,8 +10,13 @@ import lombok.Setter;
  */
 public class RowReqDTO {
 
-	/** */
+	/** 처리 방식 */
 	@Getter
 	@Setter
 	private String method;
+	
+	/** 노션 대상 DB 아이디 */
+	@Getter
+	@Setter
+	private String dbId;
 }

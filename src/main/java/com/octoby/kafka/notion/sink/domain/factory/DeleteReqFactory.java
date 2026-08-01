@@ -22,7 +22,7 @@ public class DeleteReqFactory extends RowReqFactory {
 	}
 
 	@Override
-	public RowReqDTO genDTO() {
+	public RowReqDTO createDTO() {
 		
 		DeleteReqDTO dto = new DeleteReqDTO();
 		

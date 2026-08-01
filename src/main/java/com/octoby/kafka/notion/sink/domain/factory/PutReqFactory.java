@@ -22,7 +22,7 @@ public class PutReqFactory extends RowReqFactory {
 	}
 
 	@Override
-	public RowReqDTO genDTO() {
+	public RowReqDTO createDTO() {
 		
 		PutReqDTO dto = new PutReqDTO();
 		

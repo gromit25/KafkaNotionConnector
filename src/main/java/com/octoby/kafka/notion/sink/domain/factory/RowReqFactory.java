@@ -46,7 +46,7 @@ public abstract class RowReqFactory {
 	 * 
 	 * @return 생성된 DTO 객체
 	 */
-	public abstract RowReqDTO genDTO();
+	protected abstract RowReqDTO createDTO();
 	
 	/**
 	 * 생성자
@@ -55,6 +55,34 @@ public abstract class RowReqFactory {
 	 */
 	protected RowReqFactory(Map<String, Object> jsonMap) {
 		this.jsonMap = jsonMap;
+	}
+	
+	/**
+	 * DTO 생성 추상 메소드
+	 * 
+	 * @return 생성된 DTO 객체
+	 */
+	public RowReqDTO genDTO() {
+		
+		RowReqDTO dto = this.createDTO();
+		
+		dto.setDbId(this.getDbId());
+		
+		return dto;
+	}
+	
+	/**
+	 * 노션 DB 아이디 반환
+	 * 
+	 * @return 노션 DB 아이디
+	 */
+	private String getDbId() {
+		
+		if(this.jsonMap.containsKey("dbid") == false) {
+			throw new IllegalArgumentException("'dbid' attribute is not found.");
+		}
+		
+		return this.jsonMap.get("dbid").toString();
 	}
 	
 	/**
