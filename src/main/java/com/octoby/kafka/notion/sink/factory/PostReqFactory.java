@@ -1,4 +1,4 @@
-package com.octoby.kafka.notion.sink.domain.factory;
+package com.octoby.kafka.notion.sink.factory;
 
 import java.util.Map;
 

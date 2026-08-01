@@ -7,8 +7,11 @@ import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
 
 import com.octoby.kafka.notion.Constant;
+import com.octoby.kafka.notion.sink.domain.RowReqDTO;
+import com.octoby.kafka.notion.sink.factory.RowReqFactory;
 import com.octoby.kafka.notion.util.CollectionUtil;
 import com.octoby.kafka.notion.util.CronJob;
+import com.octoby.kafka.notion.util.JSONUtil;
 
 import lombok.extern.slf4j.Slf4j;
 import notion.api.v1.NotionClient;
@@ -60,7 +63,32 @@ public class NotionSinkTask extends SinkTask {
 	}
 
 	@Override
-	public void put(Collection<SinkRecord> records) {
+	public void put(Collection<SinkRecord> sinkRecords) {
+		
+		if(this.client == null) {
+			return;
+		}
+		
+		if(sinkRecords == null || sinkRecords.size() == 0) {
+			return;
+		}
+		
+		for(SinkRecord sinkRecord: sinkRecords) {
+			
+			if(sinkRecord.value() == null) {
+				continue;
+			}
+			
+			try {
+				
+				RowReqDTO rowReqDTO = RowReqFactory
+					.create(sinkRecord.value().toString())
+					.genDTO();
+				
+			} catch(Exception ex) {
+				log.error("sink task error.", ex);
+			}
+		}
 	}
 
 	@Override
