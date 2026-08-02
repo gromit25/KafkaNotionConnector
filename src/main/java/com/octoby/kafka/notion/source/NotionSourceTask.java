@@ -10,6 +10,7 @@ import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 
 import com.octoby.kafka.notion.Constant;
+import com.octoby.kafka.notion.common.DBPageType;
 import com.octoby.kafka.notion.util.CollectionUtil;
 import com.octoby.kafka.notion.util.CronJob;
 import com.octoby.kafka.notion.util.DateUtil;
@@ -191,66 +192,18 @@ public class NotionSourceTask extends SourceTask {
 		
 		for(String key: propMap.keySet()) {
 			
+			// 컬럼의 속성 정보 획득
 			PageProperty prop = propMap.get(key);
 			
-			// 컬럼의 타입별로 데이터 설정
-			String type = prop.getType().getValue();
-			
-			switch(type) {
-			case "title":
-				{
-					StringBuilder buffer = new StringBuilder();
-					
-					for(RichText text: prop.getTitle()) {
-						buffer.append(text.getText().getContent()).append("\n");
-					}
-					
-					jsonMap.put(key, buffer.toString());
-				}
-				
-				break;
-				
-			case "rich_text":
-				{
-					StringBuilder buffer = new StringBuilder();
-					
-					for(RichText text: prop.getRichText()) {
-						buffer.append(text.getText().getContent()).append("\n");
-					}
-					
-					jsonMap.put(key, buffer.toString());
-				}
-				
-				break;
-				
-			case "number":
-				jsonMap.put(key, prop.getNumber().doubleValue());
-				break;
-				
-			case "date":
-				jsonMap.put(
-					key,
-					Map.of(
-						"start", prop.getDate().getStart(),
-						"end", prop.getDate().getEnd(),
-						"timezone", prop.getDate().getTimeZone()
-					)
-				);
-				break;
-				
-			case "multi_select":
-				{
-					StringBuilder buffer = new StringBuilder();
-					
-					for(Option option: prop.getMultiSelect()) {
-						buffer.append(option.getName()).append("\n");
-					}
-					
-					jsonMap.put(key, buffer.toString());
-				}
-
-				break;
+			// 컬럼 타입 획득
+			// 해당되는 컬럼 타입이 없는 경우 스킵
+			DBPageType type = DBPageType.get(prop.getType().getValue());
+			if(type == null) {
+				continue;
 			}
+			
+			// 컬럼의 컨텐츠를 추가함
+			jsonMap.put(key, type.getContents(prop));
 		}
 		
 		// JSON으로 
