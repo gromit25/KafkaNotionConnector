@@ -36,7 +36,7 @@ public enum DBPageType {
 		public PageProperty getPagePropery(Object contents) {
 			
 			if(contents == null) {
-				contents = "null";
+				throw new IllegalArgumentException("'contents' is null.");
 			}
 			
 			PageProperty titleProp = new PageProperty();
@@ -69,7 +69,7 @@ public enum DBPageType {
 		public PageProperty getPagePropery(Object contents) {
 			
 			if(contents == null) {
-				contents = "null";
+				throw new IllegalArgumentException("'contents' is null.");
 			}
 			
 			PageProperty richTextProp = new PageProperty();
@@ -95,7 +95,7 @@ public enum DBPageType {
 		public PageProperty getPagePropery(Object contents) {
 			
 			if(contents == null || contents instanceof Number == false) {
-				contents = Double.NaN;
+				throw new IllegalArgumentException("'contents' is null or not Numbre class.");
 			}
 			
 			PageProperty numberProp = new PageProperty();
@@ -119,6 +119,11 @@ public enum DBPageType {
 
 		@Override
 		public PageProperty getPagePropery(Object contents) {
+
+			//
+			if(contents == null || contents instanceof Map == false) {
+				throw new IllegalArgumentException("'contents' is null or not Map class.");
+			}
 			
 			//
 			@SuppressWarnings("unchecked")
@@ -163,6 +168,11 @@ public enum DBPageType {
 
 		@Override
 		public PageProperty getPagePropery(Object contents) {
+			
+			//
+			if(contents == null || contents instanceof List == false) {
+				throw new IllegalArgumentException("'conents' is null or not List class.");
+			}
 			
 			//
 			@SuppressWarnings("unchecked")
