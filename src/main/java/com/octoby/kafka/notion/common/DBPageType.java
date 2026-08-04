@@ -1,7 +1,10 @@
 package com.octoby.kafka.notion.common;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import notion.api.v1.model.common.RichTextType;
 import notion.api.v1.model.databases.DatabaseProperty.MultiSelect.Option;
 import notion.api.v1.model.pages.PageProperty;
 import notion.api.v1.model.pages.PageProperty.RichText;
@@ -20,13 +23,31 @@ public enum DBPageType {
 		@Override
 		public Object getContents(PageProperty prop) {
 			
-			StringBuilder buffer = new StringBuilder();
+			List<String> textList = new ArrayList<String>();
 			
 			for(RichText text: prop.getTitle()) {
-				buffer.append(text.getText().getContent()).append("\n");
+				textList.add(text.getText().getContent());
 			}
 			
-			return buffer.toString();
+			return textList;
+		}
+
+		@Override
+		public PageProperty getPagePropery(Object contents) {
+			
+			if(contents == null) {
+				contents = "null";
+			}
+			
+			PageProperty titleProp = new PageProperty();
+			titleProp.setTitle(List.of(
+			    new PageProperty.RichText(
+			    	RichTextType.Text,
+			    	new PageProperty.RichText.Text(contents.toString())
+			    )
+			));
+			
+			return titleProp;
 		}
 	},
 	
@@ -35,13 +56,31 @@ public enum DBPageType {
 		@Override
 		public Object getContents(PageProperty prop) {
 			
-			StringBuilder buffer = new StringBuilder();
+			List<String> textList = new ArrayList<String>();
 			
-			for(RichText text: prop.getRichText()) {
-				buffer.append(text.getText().getContent()).append("\n");
+			for(RichText text: prop.getTitle()) {
+				textList.add(text.getText().getContent());
 			}
 			
-			return buffer.toString();
+			return textList;
+		}
+
+		@Override
+		public PageProperty getPagePropery(Object contents) {
+			
+			if(contents == null) {
+				contents = "null";
+			}
+			
+			PageProperty richTextProp = new PageProperty();
+			richTextProp.setRichText(List.of(
+			    new PageProperty.RichText(
+			    	RichTextType.Text,
+			    	new PageProperty.RichText.Text(contents.toString())
+			    )
+			));
+			
+			return richTextProp;
 		}
 	},
 	
@@ -49,7 +88,20 @@ public enum DBPageType {
 		
 		@Override
 		public Object getContents(PageProperty prop) {
-			return prop.getNumber().doubleValue();
+			return prop.getNumber();
+		}
+
+		@Override
+		public PageProperty getPagePropery(Object contents) {
+			
+			if(contents == null || contents instanceof Number == false) {
+				contents = Double.NaN;
+			}
+			
+			PageProperty numberProp = new PageProperty();
+			numberProp.setNumber((Number)contents);
+			
+			return numberProp;
 		}
 	},
 	
@@ -57,11 +109,41 @@ public enum DBPageType {
 		
 		@Override
 		public Object getContents(PageProperty prop) {
+			
 			return Map.of(
 				"start", prop.getDate().getStart(),
 				"end", prop.getDate().getEnd(),
 				"timezone", prop.getDate().getTimeZone()
 			);
+		}
+
+		@Override
+		public PageProperty getPagePropery(Object contents) {
+			
+			//
+			@SuppressWarnings("unchecked")
+			Map<String, Object> contentsMap = (Map<String, Object>)contents;
+			
+			//
+			PageProperty.Date date = new PageProperty.Date();
+			
+			if(contentsMap.containsKey("start") == true) {
+				date.setStart(contentsMap.get("start").toString());
+			}
+			
+			if(contentsMap.containsKey("end") == true) {
+				date.setEnd(contentsMap.get("end").toString());
+			}
+			
+			if(contentsMap.containsKey("timezone") == true) {
+				date.setTimeZone(contentsMap.get("timezone").toString());
+			}
+			
+			//
+			PageProperty dateProp = new PageProperty();
+			dateProp.setDate(date);
+			
+			return dateProp;
 		}
 	},
 	
@@ -70,13 +152,38 @@ public enum DBPageType {
 		@Override
 		public Object getContents(PageProperty prop) {
 			
-			StringBuilder buffer = new StringBuilder();
+			List<String> textList = new ArrayList<String>();
 			
-			for(Option option: prop.getMultiSelect()) {
-				buffer.append(option.getName()).append("\n");
+			for(RichText text: prop.getTitle()) {
+				textList.add(text.getText().getContent());
 			}
 			
-			return buffer.toString();
+			return textList;
+		}
+
+		@Override
+		public PageProperty getPagePropery(Object contents) {
+			
+			//
+			@SuppressWarnings("unchecked")
+			List<String> optionIdList = (List<String>)contents;
+			
+			//
+			List<Option> optionList = new ArrayList<>();
+			
+			for(String optionId: optionIdList) {
+				
+				Option option = new Option();
+				option.setId(optionId);
+				
+				optionList.add(option);
+			}
+			
+			//
+			PageProperty multiSelectProp = new PageProperty();
+			multiSelectProp.setMultiSelect(optionList);
+			
+			return multiSelectProp;
 		}
 	}
 	;
@@ -85,28 +192,28 @@ public enum DBPageType {
 	
 	
 	/** 페이지 타입 이름 */
-	private String name;
+	private String pageTypeName;
 	
 	
 	/**
 	 * 생성자
 	 * 
-	 * @param name 페이지 타임 이름
+	 * @param pageTypeName 페이지 타임 이름
 	 */
-	DBPageType(String name) {
-		this.name = name;
+	DBPageType(String pageTypeName) {
+		this.pageTypeName = pageTypeName;
 	}
 	
 	/**
 	 * 주어진 이름에 해당하는 페이지 타입 반환
 	 * 
-	 * @param name 이름
+	 * @param pageTypeName 페이지 타입 이름
 	 * @return 페이지 타입
 	 */
-	public static DBPageType get(String name) {
+	public static DBPageType get(String pageTypeName) {
 		
 		for(DBPageType type: DBPageType.values()) {
-			if(type.name.equals(name) == true) {
+			if(type.pageTypeName.equals(pageTypeName) == true) {
 				return type;
 			}
 		}
@@ -121,4 +228,12 @@ public enum DBPageType {
 	 * @return 컨텐츠
 	 */
 	public abstract Object getContents(PageProperty prop);
+	
+	/**
+	 * 페이지 객체 반환
+	 * 
+	 * @param object 컨텐츠 객체 
+	 * @return 페이지 객체
+	 */
+	public abstract PageProperty getPagePropery(Object contents);
 }
